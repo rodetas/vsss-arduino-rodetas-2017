@@ -1,3 +1,9 @@
+/**
+ *  CÓDIGO REFERENTE A PLACA NOVA 2017
+*/
+
+
+
 #include <XBee.h>
 #include <string.h>
 
@@ -38,7 +44,7 @@ void setup() {
   pinMode(PWM_MOTORB, OUTPUT);
   pinMode(PWM_MOTORA, OUTPUT);
 
-  Serial.begin(9600);
+  Serial.begin(19200);
   xbee.setSerial(Serial);
 }
 
