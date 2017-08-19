@@ -1,8 +1,6 @@
-/**
- *  CÓDIGO REFERENTE A PLACA NOVA 2017
-*/
-
-
+// timer 0 - 5 e 6
+// timer 1 - 9 e 10 (Interrupção do controle PID - Portas Livres) 
+// timer 2 - 3 e 11 (Motorees por causa da frequência mínima)
 
 #include <XBee.h>
 #include <string.h>
@@ -15,24 +13,31 @@ void back();
 void turnRight();
 void turnLeft();
 void stopped();
+void timerInterrupt();
 
 XBee xbee = XBee();
 Tx16Request tx;
 Rx16Response rx = Rx16Response();
 
 const byte AIN2 = 4;
-const byte AIN1 = 5;
+const byte AIN1 = 5;  
 const byte STBY = 6;
 const byte BIN1 = 7;
 const byte BIN2 = 8;
 const byte PWM_MOTORB = 9;
 const byte PWM_MOTORA = 10;
 
+const float frequency = 25; // Hz
+const float dt = (1 / frequency) * 1000000; // microseconds
+
+int left_cont = 0;
+int right_cont = 0;
+
 int direction;
 int pwm1 = 0;
 int pwm2 = 0;
 
-unsigned long last_millis = 0;
+unsigned long last_micros = 0;
 
 void setup() {
 
@@ -44,11 +49,19 @@ void setup() {
   pinMode(PWM_MOTORB, OUTPUT);
   pinMode(PWM_MOTORA, OUTPUT);
 
+  TCCR1B = (TCCR1B & 0b11111000) | B00000001; // set timer 1 PWM frequency of 31372.55 Hz
+  
+  attachInterrupt(0, encoderLeft, RISING);
+  attachInterrupt(1, encoderRight, RISING);
+
   Serial.begin(19200);
   xbee.setSerial(Serial);
 }
 
 void loop() {
+
+  timerInterrupt();
+  
   receivingSerial();
 
   analogWrite(PWM_MOTORA, pwm1);
@@ -73,6 +86,10 @@ void loop() {
   }
 }
 
+ISR(TIMER1_COMPA_vect) {
+  Serial.println(left_cont);
+}
+
 void receivingSerial() {
   xbee.readPacket();
 
@@ -87,6 +104,21 @@ void receivingSerial() {
       pwm2 = (rx.getData(4) - '0') * 100 + (rx.getData(5) - '0') * 10 + (rx.getData(6) - '0');
     }
   }
+}
+
+void timerInterrupt(){
+  unsigned long calculated = micros() - last_micros;  
+  if (calculated >= dt){
+      last_micros = micros(); 
+  } 
+}
+
+void encoderLeft() {
+  left_cont++;
+}
+
+void encoderRight() {
+  right_cont++;
 }
 
 void forward() {
