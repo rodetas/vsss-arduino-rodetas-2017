@@ -137,7 +137,7 @@ void back() {
   digitalWrite(STBY, HIGH);
 }
 
-void turnRight() {
+void turnLeft() {
   digitalWrite(AIN2, LOW);
   digitalWrite(AIN1, HIGH);
   digitalWrite(BIN1, HIGH);
@@ -145,7 +145,7 @@ void turnRight() {
   digitalWrite(STBY, HIGH);
 }
 
-void turnLeft() {
+void turnRight() {
   digitalWrite(AIN2, HIGH);
   digitalWrite(AIN1, LOW);
   digitalWrite(BIN1, LOW);
