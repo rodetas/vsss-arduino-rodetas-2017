@@ -87,7 +87,7 @@ void loop() {
 }
 
 ISR(TIMER1_COMPA_vect) {
-  Serial.println(left_cont);
+//  Serial.println(left_cont);
 }
 
 void receivingSerial() {
