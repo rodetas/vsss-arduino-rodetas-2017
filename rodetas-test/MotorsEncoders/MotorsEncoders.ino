@@ -54,6 +54,15 @@ void loop() {
   timerInterrupt();
   
   receivingSerial();
+  
+  pwm1 = 255;
+  pwm2 = 255;
+  
+  forward();
+  delay(500);
+  
+  stopped();
+  delay(500);
 
   analogWrite(PWM_MOTORA, pwm1);
   analogWrite(PWM_MOTORB, pwm2);
@@ -96,9 +105,9 @@ void receivingSerial() {
 void timerInterrupt(){
   unsigned long calculated = micros() - last_micros;  
   if (calculated >= dt){
-      //Serial.print(left_cont);
-      //Serial.print(" - ");
-      //Serial.println(right_cont);
+      Serial.print(left_cont);
+      Serial.print(" - ");
+      Serial.println(right_cont);
       last_micros = micros(); 
   } 
 }
@@ -146,3 +155,4 @@ void turnRight() {
 void stopped() {
   digitalWrite(STBY, LOW);
 }
+
