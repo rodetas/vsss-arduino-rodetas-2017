@@ -1,4 +1,4 @@
-#Codigo para receber mensagem enviada pelo Xbee
+# Código para receber mensagem enviada no Xbee conectado ao computador
 
 #! /usr/bin/python
 

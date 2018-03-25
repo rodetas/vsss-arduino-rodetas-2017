@@ -18,17 +18,9 @@ const byte BIN2 = 8;
 const byte PWM_MOTORB = 9;
 const byte PWM_MOTORA = 10;
 
-const float frequency = 25; // Hz
-const float dt = (1 / frequency) * 1000000; // microseconds
-
-int left_cont = 0;
-int right_cont = 0;
-
 int direction;
 int pwm1 = 0;
 int pwm2 = 0;
-
-unsigned long last_micros = 0;
 
 void setup() {
 
@@ -40,29 +32,16 @@ void setup() {
   pinMode(PWM_MOTORB, OUTPUT);
   pinMode(PWM_MOTORA, OUTPUT);
 
-  TCCR1B = (TCCR1B & 0b11111000) | B00000001; // set timer 1 PWM frequency of 31372.55 Hz
-  
-  attachInterrupt(0, encoderLeft, RISING);
-  attachInterrupt(1, encoderRight, RISING);
+  // set timer 1 PWM frequency of 31372.55 Hz
+  TCCR1B = (TCCR1B & 0b11111000) | B00000001; 
 
   Serial.begin(19200);
   xbee.setSerial(Serial);
 }
 
 void loop() {
-
-  timerInterrupt();
   
   receivingSerial();
-  
-  pwm1 = 255;
-  pwm2 = 255;
-  
-  forward();
-  delay(500);
-  
-  stopped();
-  delay(500);
 
   analogWrite(PWM_MOTORA, pwm1);
   analogWrite(PWM_MOTORB, pwm2);
@@ -102,24 +81,6 @@ void receivingSerial() {
   }
 }
 
-void timerInterrupt(){
-  unsigned long calculated = micros() - last_micros;  
-  if (calculated >= dt){
-      Serial.print(left_cont);
-      Serial.print(" - ");
-      Serial.println(right_cont);
-      last_micros = micros(); 
-  } 
-}
-
-void encoderLeft() {
-  left_cont++;
-}
-
-void encoderRight() {
-  right_cont++;
-}
-
 void forward() {
   digitalWrite(AIN2, HIGH);
   digitalWrite(AIN1, LOW);
@@ -155,4 +116,3 @@ void turnRight() {
 void stopped() {
   digitalWrite(STBY, LOW);
 }
-

@@ -1,8 +1,10 @@
-## Codigo Embarcado
-Codigo do robô com modo API
+## Código Embarcado
+Códigos de teste e de competição do robô rodetas com e sem modo API
 
 
 ### Configuring
+
+Biblioteca necessária: Xbee
 
 ```
 git clone https://github.com/andrewrapp/xbee-arduino.git
